@@ -389,6 +389,14 @@ class ShoppingList extends StatefulWidget {
     // instead of creating a new State object.
     @override
     _ShoppingListState createState() => new _ShoppingListState();
+
+    /*To access properties of the current ShoppingList, the _ShoppingListState can use its widget property. If the parent rebuilds and creates
+    a new  ShoppingList, the _ShoppingListState will also rebuild with the new widget value. If you wish to be notified when the widget property
+    changes, you can override the didUpdateWidget function, which is passed oldWidget to let you compare the old widget with the current widget.*/
+//    @override
+//    void didUpdateWidget(covariant ShoppingList oldWidget) {
+//        super.didUpdateWidget(oldWidget);
+//    }
 }
 
 class _ShoppingListState extends State<ShoppingList> {
