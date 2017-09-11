@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 new Container(
-                  margin: new EdgeInsets.symmetric(horizontal: 4.0),
+                  margin: new EdgeInsets.only(left: 40.0),
                   child: new IconButton(
                       icon: new Icon(Icons.send),
                   onPressed: () => _handleSubmmited(_textController.text)),
@@ -107,62 +107,104 @@ class _MyHomePageState extends State<MyHomePage> {
       body: new Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: new Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug paint" (press "p" in the console where you ran
-          // "flutter run", or select "Toggle Debug Paint" from the Flutter tool
-          // window in IntelliJ) to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text(
-              'You have pushed the button this many times:',
+//        child: new Column(
+//          // Column is also layout widget. It takes a list of children and
+//          // arranges them vertically. By default, it sizes itself to fit its
+//          // children horizontally, and tries to be as tall as its parent.
+//          //
+//          // Invoke "debug paint" (press "p" in the console where you ran
+//          // "flutter run", or select "Toggle Debug Paint" from the Flutter tool
+//          // window in IntelliJ) to see the wireframe for each widget.
+//          //
+//          // Column has various properties to control how it sizes itself and
+//          // how it positions its children. Here we use mainAxisAlignment to
+//          // center the children vertically; the main axis here is the vertical
+//          // axis because Columns are vertical (the cross axis would be
+//          // horizontal).
+//          mainAxisAlignment: MainAxisAlignment.center,
+//          children: <Widget>[
+//            new Text(
+//              'You have pushed the button this many times:',
+//            ),
+//            new Text(
+//              '${_counter}',
+//              style: Theme.of(context).textTheme.display1,
+//            ),
+//            new RaisedButton(
+//              onPressed: () {
+////                Scaffold.of(context).showSnackBar(
+////                  new SnackBar(
+////                    content: new Text("Added to favorite"),
+////                    action: new SnackBarAction(
+////                      label: "UNDO",
+////                      onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+////                    ),
+////                  ),
+////                );
+//              },
+//              color: Colors.blue[400],
+//              child: new Text('RaisedButton',
+//                  style: new TextStyle(color: Colors.white)),
+//            ),
+//            new FlatButton(
+//              onPressed: () {},
+//              color: Colors.blue[400],
+//              child: new Text('FlatButton',
+//                  style: new TextStyle(color: Colors.white)),
+//            ),
+            child: new Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                  new Text(
+                      'You have pushed the button this many times:',
+                  ),
+                  new Text(
+                      '${_counter}',
+                      style: Theme
+                              .of(context)
+                              .textTheme
+                              .display1,
+                  ),
+                  new RaisedButton(
+                      onPressed: () {
+                      },
+                      color: Colors.blue[400],
+                      child: new Text('RaisedButton',
+                              style: new TextStyle(color: Colors.white)),
+                  ),
+                  new FlatButton(
+                      onPressed: () {},
+                      color: Colors.blue[400],
+                      child: new Text('FlatButton',
+                              style: new TextStyle(color: Colors.white)),
+                  ),
+                  new Flexible(
+                          child: new ListView.builder(
+                              padding: new EdgeInsets.all(8.0),
+                              reverse: true,
+                              itemBuilder: (_, int index) => _message[index],
+                              itemCount: _message.length,
+                          )
+                  ),
+                  new Divider(
+                      height: 1.0,
+                  ),
+                  new Container(
+                      decoration: new BoxDecoration(color: Theme.of(context).cardColor),
+                      child: _buildTextComposer(),
+                  )
+              ],
             ),
-            new Text(
-              '${_counter}',
-              style: Theme.of(context).textTheme.display1,
-            ),
-            new RaisedButton(
-              onPressed: () {
-//                Scaffold.of(context).showSnackBar(
-//                  new SnackBar(
-//                    content: new Text("Added to favorite"),
-//                    action: new SnackBarAction(
-//                      label: "UNDO",
-//                      onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
-//                    ),
-//                  ),
-//                );
-              },
-              color: Colors.blue[400],
-              child: new Text('RaisedButton',
-                  style: new TextStyle(color: Colors.white)),
-            ),
-            new FlatButton(
-              onPressed: () {},
-              color: Colors.blue[400],
-              child: new Text('FlatButton',
-                  style: new TextStyle(color: Colors.white)),
-            ),
-            _buildTextComposer(),
-          ],
-        ),
+//          ],
+//        ),
       ),
-      floatingActionButton: new FloatingActionButton(
-          onPressed: _incrementCounter,
-          tooltip: 'Increment',
-//        child: new Icon(Icons.add)
-          child: new Text(
-            "add",
-          )), // This trailing comma makes auto-formatting nicer for build methods.
+//      floatingActionButton: new FloatingActionButton(
+//          onPressed: _incrementCounter,
+//          tooltip: 'Increment',
+////        child: new Icon(Icons.add)
+//          child: new Text(
+//            "add",
+//          )), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
