@@ -215,14 +215,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         ),
                         new Flexible(
                                 child: new ListView.builder(
-                                    padding: new EdgeInsets.all(8.0),
+                                    padding: new EdgeInsets.all(8.0), // in logical pixels
                                     reverse: true,
                                     itemBuilder: (_, int index) => _message[index],
                                     itemCount: _message.length,
                                 )
                         ),
                         new Divider(
-                            height: 1.0,
+                            height: 1.0, // in logical pixels
                         ),
                         new Container(
                             decoration: new BoxDecoration(color: Theme.of(context).cardColor),
@@ -264,7 +264,7 @@ class ChatMessage extends StatelessWidget {
                   curve: Curves.easeOut),
           axisAlignment: 0.0,
           child: new Container(
-              margin: const EdgeInsets.symmetric(vertical: 10.0),
+              margin: const EdgeInsets.symmetric(vertical: 10.0), // in logical pixels
               child: new Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
