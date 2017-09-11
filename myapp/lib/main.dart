@@ -208,9 +208,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                     style: new TextStyle(color: Colors.white)),
                         ),
                         // Expanded expands its child to fill the available space.
-                        new Expanded(
-                            child: new Text(widget.title),
-                        ),
+//                        new Expanded(
+//                            child: new Text(widget.title),
+//                        ),
+                        new MyButton(),
                         new FlatButton(
                             onPressed: () {},
                             color: Colors.blue[400],
@@ -301,4 +302,27 @@ class ChatMessage extends StatelessWidget {
           ),
       );
   }
+}
+
+class MyButton extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+        return new GestureDetector(
+            onTap: () {
+                print("myButton was tapped!");//You can use GestureDetector to detect a variety of input gestures, including taps, drags, and scales.
+            },
+            child: new Container(
+                height: 36.0,
+                padding: const EdgeInsets.all(8.0),
+                margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                decoration: new BoxDecoration(
+                    borderRadius: new BorderRadius.circular(5.0),
+                    color: Colors.lightGreen[500],
+                ),
+                child: new Center(
+                    child: new Text("Engage"),
+                ),
+            ),
+        );
+    }
 }
