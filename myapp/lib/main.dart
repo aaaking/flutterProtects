@@ -207,6 +207,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             child: new Text('RaisedButton',
                                     style: new TextStyle(color: Colors.white)),
                         ),
+                        // Expanded expands its child to fill the available space.
+                        new Expanded(
+                            child: new Text(widget.title),
+                        ),
                         new FlatButton(
                             onPressed: () {},
                             color: Colors.blue[400],
