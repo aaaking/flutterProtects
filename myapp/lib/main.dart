@@ -40,7 +40,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => new _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   final List<ChatMessage> _message = <ChatMessage>[];
   final TextEditingController _textController = new TextEditingController();
   int _counter = 0;
@@ -69,14 +69,27 @@ class _MyHomePageState extends State<MyHomePage> {
             )));
   }
 
+  @override
+  void dispose() {
+      for (ChatMessage message in _message) {
+          message.animationController.dispose();
+      }
+      super.dispose();
+  }
+
   void _handleSubmmited(String text) {
     _textController.clear();
     ChatMessage message = new ChatMessage(
-      text: text,
+        text: text,
+        animationController: new AnimationController(
+            duration: new Duration(milliseconds: 700),
+            vsync: this,
+        ),
     );
     setState(() {
       _message.insert(0, message);
     });
+    message.animationController.forward();
   }
 
   void _incrementCounter() {
@@ -212,36 +225,46 @@ class _MyHomePageState extends State<MyHomePage> {
 const String _name = "Zhihui Zhou";
 
 class ChatMessage extends StatelessWidget {
-  ChatMessage({this.text});
+  ChatMessage({this.text, this.animationController});
   final String text;
+  final AnimationController animationController;
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      margin: const EdgeInsets.symmetric(vertical: 10.0),
-      child: new Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          new Container(
-            margin: const EdgeInsets.only(right: 16.0),
-            child: new CircleAvatar(
-              child: new Text(_name[0]),
-            ),
-          ),
-          new Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              new Text(
-                _name,
-                style: Theme.of(context).textTheme.subhead,
+      return new SizeTransition(
+          sizeFactor: new CurvedAnimation(
+                  parent: animationController,
+                  curve: Curves.easeOut),
+          axisAlignment: 0.0,
+          child: new Container(
+              margin: const EdgeInsets.symmetric(vertical: 10.0),
+              child: new Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                      new Container(
+                          margin: const EdgeInsets.only(right: 16.0),
+                          child: new CircleAvatar(
+                              child: new Text(_name[0]),
+                          ),
+                      ),
+                      new Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                              new Text(
+                                  _name,
+                                  style: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .subhead,
+                              ),
+                              new Container(
+                                  margin: const EdgeInsets.only(top: 5.0),
+                                  child: new Text(text),
+                              )
+                          ],
+                      )
+                  ],
               ),
-              new Container(
-                margin: const EdgeInsets.only(top: 5.0),
-                child: new Text(text),
-              )
-            ],
-          )
-        ],
-      ),
-    );
+          ),
+      );
   }
 }
