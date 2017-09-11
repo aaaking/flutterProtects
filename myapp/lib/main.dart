@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -5,22 +7,21 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+    final ThemeData kIOSTheme = new ThemeData(
+        primarySwatch: Colors.orange,
+        primaryColor: Colors.grey[100],
+        primaryColorBrightness: Brightness.light,
+    );
+    final ThemeData kDefaultTheme = new ThemeData(
+        primarySwatch: Colors.purple,
+        accentColor: Colors.orangeAccent[400],
+    );
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Flutter Demo',
-      theme: new ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-        // counter didn't reset back to zero; the application is not restarted.
-        primarySwatch: Colors.blue,
-      ),
+      theme: defaultTargetPlatform == TargetPlatform.iOS ? kIOSTheme : kDefaultTheme,
       home: new MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -44,6 +45,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   final List<ChatMessage> _message = <ChatMessage>[];
   final TextEditingController _textController = new TextEditingController();
   int _counter = 0;
+  bool _isComposing = false;
+  //创建输入框UI
   Widget _buildTextComposer() {
     return new IconTheme(
         data: new IconThemeData(color: Theme.of(context).accentColor),
@@ -55,15 +58,28 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   child: new TextField(
                     controller: _textController,
                     onSubmitted: _handleSubmmited,
+                    onChanged: (String text) {
+                        setState(() {
+                           _isComposing = text.length > 0;
+                        });
+                    },
                     decoration: new InputDecoration.collapsed(
                         hintText: "Send a message"),
                   ),
                 ),
                 new Container(
-                  margin: new EdgeInsets.only(left: 40.0),
-                  child: new IconButton(
-                      icon: new Icon(Icons.send),
-                  onPressed: () => _handleSubmmited(_textController.text)),
+                    margin: new EdgeInsets.only(left: 40.0),
+                    child: Theme.of(context).platform == TargetPlatform.iOS ?
+                    new CupertinoButton(
+                        child: new Text("Send"),
+                        onPressed: _isComposing ? () =>
+                                _handleSubmmited(_textController.text) : null,)
+                            :
+                    new IconButton(
+                        icon: new Icon(Icons.send),
+                        onPressed: _isComposing ? () =>
+                                _handleSubmmited(_textController.text) : null,
+                    ),
                 ),
               ],
             )));
@@ -79,6 +95,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   void _handleSubmmited(String text) {
     _textController.clear();
+    setState(() {
+       _isComposing = false;
+    });
     ChatMessage message = new ChatMessage(
         text: text,
         animationController: new AnimationController(
@@ -115,7 +134,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       appBar: new AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: new Text(widget.title),
+          title: new Text(widget.title),
+          //the elevation property defines the z-coordinates of the AppBar. A z-coordinate value of 0.0 has no shadow(iOS) and a value of 4.0 has a defined shadow(android)
+          elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
       ),
       body: new Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -165,48 +186,55 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 //              child: new Text('FlatButton',
 //                  style: new TextStyle(color: Colors.white)),
 //            ),
-            child: new Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                  new Text(
-                      'You have pushed the button this many times:',
-                  ),
-                  new Text(
-                      '${_counter}',
-                      style: Theme
-                              .of(context)
-                              .textTheme
-                              .display1,
-                  ),
-                  new RaisedButton(
-                      onPressed: () {
-                      },
-                      color: Colors.blue[400],
-                      child: new Text('RaisedButton',
-                              style: new TextStyle(color: Colors.white)),
-                  ),
-                  new FlatButton(
-                      onPressed: () {},
-                      color: Colors.blue[400],
-                      child: new Text('FlatButton',
-                              style: new TextStyle(color: Colors.white)),
-                  ),
-                  new Flexible(
-                          child: new ListView.builder(
-                              padding: new EdgeInsets.all(8.0),
-                              reverse: true,
-                              itemBuilder: (_, int index) => _message[index],
-                              itemCount: _message.length,
-                          )
-                  ),
-                  new Divider(
-                      height: 1.0,
-                  ),
-                  new Container(
-                      decoration: new BoxDecoration(color: Theme.of(context).cardColor),
-                      child: _buildTextComposer(),
-                  )
-              ],
+            child: new Container(
+                child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                        new Text(
+                            'You have pushed the button this many times:',
+                        ),
+                        new Text(
+                            '${_counter}',
+                            style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .display1,
+                        ),
+                        new RaisedButton(
+                            onPressed: () {
+                            },
+                            color: Colors.blue[400],
+                            child: new Text('RaisedButton',
+                                    style: new TextStyle(color: Colors.white)),
+                        ),
+                        new FlatButton(
+                            onPressed: () {},
+                            color: Colors.blue[400],
+                            child: new Text('FlatButton',
+                                    style: new TextStyle(color: Colors.white)),
+                        ),
+                        new Flexible(
+                                child: new ListView.builder(
+                                    padding: new EdgeInsets.all(8.0),
+                                    reverse: true,
+                                    itemBuilder: (_, int index) => _message[index],
+                                    itemCount: _message.length,
+                                )
+                        ),
+                        new Divider(
+                            height: 1.0,
+                        ),
+                        new Container(
+                            decoration: new BoxDecoration(color: Theme.of(context).cardColor),
+                            child: _buildTextComposer(),
+                        ),
+                    ],
+                ),
+                decoration: Theme
+                        .of(context)
+                        .platform == TargetPlatform.iOS ?
+                new BoxDecoration(border: new Border(
+                        top: new BorderSide(color: Colors.grey[200]))) : null,
             ),
 //          ],
 //        ),
@@ -244,6 +272,8 @@ class ChatMessage extends StatelessWidget {
                           margin: const EdgeInsets.only(right: 16.0),
                           child: new CircleAvatar(
                               child: new Text(_name[0]),
+//                              foregroundColor: Colors.red,
+//                              backgroundColor: Colors.green,
                           ),
                       ),
                       new Column(
