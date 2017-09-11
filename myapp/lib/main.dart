@@ -19,11 +19,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Flutter Demo',
-      theme: defaultTargetPlatform == TargetPlatform.iOS ? kIOSTheme : kDefaultTheme,
-      home: new MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+      return new MaterialApp(
+          title: 'Flutter Demo',
+          theme: defaultTargetPlatform == TargetPlatform.iOS
+                  ? kIOSTheme
+                  : kDefaultTheme,
+//      home: new MyHomePage(title: 'Flutter Demo Home Page'),
+          home: new ShoppingList(products: <Product>[
+              new Product(name: "Eggs"),
+              new Product(name: "Apples"),
+              new Product(name: "Pineapples"),
+          ], appTitle: "ShoppingApp"),
+      );
   }
 }
 
@@ -322,6 +329,101 @@ class MyButton extends StatelessWidget {
                 child: new Center(
                     child: new Text("Engage"),
                 ),
+            ),
+        );
+    }
+}
+
+class Product {
+    final String name;
+    const Product({this.name});
+}
+
+typedef void CartChangedCallback(Product product, bool inCart);
+
+class ShoppingListItem extends StatelessWidget {
+    final Product product;
+    final bool inCart;
+    final CartChangedCallback onCartChanged;
+    ShoppingListItem({Product product, this.inCart, this.onCartChanged})
+            : product = product,
+                super(key: new ObjectKey(product));
+
+    Color _getColor(BuildContext context) {
+        // The theme depends on the BuildContext because different parts of the tree
+        // can have different themes.  The BuildContext indicates where the build is
+        // taking place and therefore which theme to use.
+        return inCart ? Colors.black54 : Theme.of(context).primaryColor;
+    }
+
+    TextStyle _getTextStyle(BuildContext context) {
+        if (!inCart) return null;
+        return new TextStyle(
+            color: Colors.black54,
+            decoration: TextDecoration.lineThrough,
+        );
+    }
+
+    @override
+    Widget build(BuildContext context) {
+        return new ListTile(
+            onTap: () {
+                onCartChanged(product, !inCart);
+            },
+            leading: new CircleAvatar(
+                backgroundColor: _getColor(context),
+                child: new Text(product.name[0]),
+            ),
+            title: new Text(product.name, style: _getTextStyle(context)),
+        );
+    }
+}
+
+class ShoppingList extends StatefulWidget {
+    final String appTitle;
+    ShoppingList({Key key, this.products, this.appTitle}) : super(key: key);
+    final List<Product> products;
+    // The framework calls createState the first time a widget appears at a given
+    // location in the tree. If the parent rebuilds and uses the same type of
+    // widget (with the same key), the framework will re-use the State object
+    // instead of creating a new State object.
+    @override
+    _ShoppingListState createState() => new _ShoppingListState();
+}
+
+class _ShoppingListState extends State<ShoppingList> {
+    Set<Product> _shoppingCart = new Set<Product>();
+    void _handleCartChanged(Product product, bool inCart) {
+        setState(() {
+            // When user changes what is in the cart, we need to change _shoppingCart
+            // inside a setState call to trigger a rebuild. The framework then calls
+            // build, below, which updates the visual appearance of the app.
+            if (inCart)
+                _shoppingCart.add(product);
+            else
+                _shoppingCart.remove(product);
+        });
+    }
+
+    @override
+    Widget build(BuildContext context) {
+        return new Scaffold(
+            appBar: new AppBar(
+                // Here we take the value from the MyHomePage object that was created by
+                // the App.build method, and use it to set our appbar title.
+                title: new Text(widget.appTitle),
+                //the elevation property defines the z-coordinates of the AppBar. A z-coordinate value of 0.0 has no shadow(iOS) and a value of 4.0 has a defined shadow(android)
+                elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
+            ),
+            body: new ListView(
+                padding: new EdgeInsets.symmetric(vertical: 8.0),
+                children: widget.products.map((Product product) {
+                    return new ShoppingListItem(
+                        product: product,
+                        inCart: _shoppingCart.contains(product),
+                        onCartChanged: _handleCartChanged,
+                    );
+                }).toList(),
             ),
         );
     }
