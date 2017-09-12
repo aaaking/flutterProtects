@@ -1,5 +1,8 @@
 void main() {
-    for (int i = 0; i < 5; i++) {
-        print("hello ${i + 1}");
-    }
+    int lineCount;
+    assert(lineCount == null);
+}
+
+printNum(num aNumber) {
+    print("$aNumber");
 }
